@@ -7,7 +7,12 @@
 }
 
 body {
-  background-color: #E8F0EE;
-  font-family: var(--font-sans, system-ui, sans-serif);
-  color: #0F2420;
+  background-color: #EDE8DE;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #1A1A17;
+}
+
+::selection {
+  background: #A8421E;
+  color: #F5F1E8;
 }
