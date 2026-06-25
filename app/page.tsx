@@ -1,7 +1,6 @@
 "use client"
-
 import { useState } from "react"
-
+import Logo from "./components/logo"
 type AppState = "idle" | "processing" | "done" | "error"
 
 interface JobResult {
@@ -50,14 +49,8 @@ export default function Home() {
       margin: "0 auto",
       padding: "2rem 1.5rem",
     }}>
-      <div style={{
-        fontSize: "22px",
-        fontWeight: 500,
-        letterSpacing: "-0.03em",
-        marginBottom: "2.5rem",
-        color: "#0F2420",
-      }}>
-        vox<span style={{ color: "#1D9E75" }}>ake</span>
+      <div style={{ marginBottom: "2.5rem" }}>
+        <Logo size={22} />
       </div>
 
       {appState === "idle" && (
