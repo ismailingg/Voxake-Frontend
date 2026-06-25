@@ -47,7 +47,7 @@ export default function Home() {
     <main style={{
       maxWidth: "680px",
       margin: "0 auto",
-      padding: "2rem 1.5rem",
+      padding: "4rem 1.5rem 2rem",
     }}>
       <div style={{ marginBottom: "2.5rem" }}>
         <Logo size={22} />
