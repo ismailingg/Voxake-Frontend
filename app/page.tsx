@@ -134,13 +134,17 @@ export default function Home() {
   )
 }
 
-function UploadSection({ onProcessingStart, onError }: {
+function UploadSection({
+  onProcessingStart,
+  onError,
+}: {
   onProcessingStart: (jobId: string) => void
   onError: (message: string) => void
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -170,7 +174,8 @@ function UploadSection({ onProcessingStart, onError }: {
   }
 
   const handleSubmit = async () => {
-    if (!audioFile) return
+    if (!audioFile || isSubmitting) return
+    setIsSubmitting(true)
     const fd = new FormData()
     fd.append("file", audioFile)
     fd.append("recorded_at", new Date().toISOString())
@@ -180,6 +185,7 @@ function UploadSection({ onProcessingStart, onError }: {
       if (!res.ok) throw new Error(data.detail || "Upload failed")
       onProcessingStart(data.id)
     } catch (err: unknown) {
+      setIsSubmitting(false)
       onError(err instanceof Error ? err.message : "Something went wrong")
     }
   }
@@ -245,15 +251,33 @@ function UploadSection({ onProcessingStart, onError }: {
           onChange={(e) => { const f = e.target.files?.[0]; if (f) setAudioFile(f) }} />
       </div>
 
-      <button onClick={handleSubmit} disabled={!audioFile} style={{
-        width: "100%", padding: "13px", border: "none",
-        background: audioFile ? "#1A1A17" : "#B5AB92",
-        color: "#F5F1E8", fontFamily: SANS, fontSize: "12px", fontWeight: 600,
-        letterSpacing: "0.1em", textTransform: "uppercase",
-        cursor: audioFile ? "pointer" : "not-allowed", marginTop: "8px",
-      }}>
-        Set in print →
-      </button>
+      {isSubmitting ? (
+        <div style={{
+          textAlign: "center",
+          padding: "13px",
+          fontFamily: SERIF,
+          fontStyle: "italic",
+          fontSize: "15px",
+          color: "#A8421E",
+          letterSpacing: "0.01em",
+        }}>
+          Sending to press…
+        </div>
+      ) : (
+        <button
+          onClick={handleSubmit}
+          disabled={!audioFile}
+          style={{
+            width: "100%", padding: "13px", border: "none",
+            background: audioFile ? "#1A1A17" : "#B5AB92",
+            color: "#F5F1E8", fontFamily: SANS, fontSize: "12px", fontWeight: 600,
+            letterSpacing: "0.1em", textTransform: "uppercase",
+            cursor: audioFile ? "pointer" : "not-allowed", marginTop: "8px",
+          }}
+        >
+          Set in print →
+        </button>
+      )}
     </div>
   )
 }
